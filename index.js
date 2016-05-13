@@ -1,6 +1,7 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var pushbots = require('./pushbots');
 var user = {};
 
 app.get('/', function (req, res) {
@@ -17,8 +18,12 @@ io.on('connection', function (socket) {
 
     socket.on('message', function (data) {
         console.log(data);
-        if (user[data.receiver]) { // If the receiver is now connected to the socket, send him the message
+        if (user[data.receiver] != null) { // If the receiver is now connected to the socket, send him the message
             user[data.receiver].emit('message', {message: data.text, image: data.image});
+            console.log("No notification needed");
+        } else {
+            console.log("Calling Notification");
+            pushbots(data);
         }
 
     })
