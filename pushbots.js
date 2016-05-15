@@ -4,9 +4,9 @@ var Pushbots = new pushbots.api({
     secret:'2a783d812d36607a6de6a588866502b9'
 });
 
-    module.exports = function(data){
+exports.send = function(data){
     console.log("Calling send function");
-        console.log("Data received= :" + data.text);
+    console.log("Data received= :" + data.receiver + " " + data.text);
     Pushbots.setMessage(data.text ,1);
     Pushbots.customFields({"article_id":"1234"});
     Pushbots.customNotificationTitle("Textor");

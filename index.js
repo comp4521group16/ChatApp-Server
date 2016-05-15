@@ -17,13 +17,14 @@ io.on('connection', function (socket) {
     })
 
     socket.on('message', function (data) {
-        console.log(data);
+        console.log("Data received from the socket: " + data);
         if (user[data.receiver] != null) { // If the receiver is now connected to the socket, send him the message
             user[data.receiver].emit('message', {message: data.text, image: data.image});
+            console.log("Receiver socket: " + user[data.receiver].toString());
             console.log("No notification needed");
-        } else {
-            console.log("Calling Notification");
-            pushbots(data);
+        }else if(user[data.receiver] == null) {
+            console.log("Calling Notification", data.receiver, data.text);
+            pushbots.send(data);
         }
 
     })
