@@ -16,6 +16,7 @@ exports.send = function(data){
         Pushbots.setMessage(data.text ,1);
         Pushbots.customFields({"receiver": data.receiver, "sender": data.sender, "content": data.text, "isPhoto": data.isPhoto});
     }
+   // Pushbots.nextActivity("com.example.kalongip.chatapp.SocketActivity");
     Pushbots.customNotificationTitle("Textor");
     Pushbots.sendByAlias(data.receiver);
     Pushbots.push(function(response){
