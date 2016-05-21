@@ -4,6 +4,8 @@ var io = require('socket.io')(http);
 var pushbots = require('./pushbots');
 var user = {};
 var chatWith = {};
+var index = 1;
+var msgBuffer = {};
 
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
@@ -28,9 +30,21 @@ io.on('connection', function (socket) {
             console.log("No notification needed");
         }else {
             console.log("Calling Notification", data.receiver, data.text);
-            pushbots.send(data);
+            if(data.isPhoto == "true"){
+                console.log("Handling photo offline");
+                msgBuffer[index] = data.image;
+                pushbots.send(data, index);
+                index = index + 1;
+            }else{
+                pushbots.send(data, null);
+            }
         }
 
+    })
+    socket.on('retrievePhoto', function(data){
+        console.log(data.receiver + " retrieving photo");
+        user[data.receiver].emit('message', {image: msgBuffer[data.index]});
+        msgBuffer[data.index] = null;
     })
 
     socket.on('offline', function (data) { // When the user is not connected to the socket, set his socket to null

@@ -4,16 +4,16 @@ var Pushbots = new pushbots.api({
     secret:'2a783d812d36607a6de6a588866502b9'
 });
 
-exports.send = function(data){
+exports.send = function(data, index){
     console.log("Calling send function");
     console.log("Data received= :" + data);
-    if(data.isPhoto=== "true"){
+    if(data.isPhoto === "true"){
         console.log("Pushing Photo Message");
-        Pushbots.setMessage(data.image ,1);
-        Pushbots.customFields({"receiver": data.receiver, "sender": data.sender, "content": data.image, "isPhoto": data.isPhoto});
+        Pushbots.setMessage(data.sender + " sent you a photo" ,1);
+        Pushbots.customFields({"receiver": data.receiver, "sender": data.sender, "content": index, "isPhoto": data.isPhoto});
     }else{
         console.log("Pushing Text Message");
-        Pushbots.setMessage(data.text ,1);
+        Pushbots.setMessage(data.sender + ": " +data.text ,1);
         Pushbots.customFields({"receiver": data.receiver, "sender": data.sender, "content": data.text, "isPhoto": data.isPhoto});
     }
    // Pushbots.nextActivity("com.example.kalongip.chatapp.SocketActivity");
